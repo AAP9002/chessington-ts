@@ -14,15 +14,33 @@ export default class Pawn extends Piece {
         const col = square.col;
 
         if (this.player === Player.BLACK) {
-            moves.push(Square.at(row - 1, col))
-            if(row === 6){
-                moves.push(Square.at(row - 2, col))
+            const one_space = Square.at(row - 1, col)
+            if(board.getPiece(one_space) === undefined)
+            {
+                moves.push(one_space)
+
+                // check if move 2 possible
+                if(row === 6){
+                    const two_space = Square.at(row - 2, col)
+                    if(board.getPiece(two_space) === undefined){
+                        moves.push(two_space)
+                    }
+                }
             }
         }
         else {
-            moves.push(Square.at(row + 1, col))
-            if(row === 1){
-                moves.push(Square.at(row + 2, col))
+            const one_space = Square.at(row + 1, col)
+            if(board.getPiece(one_space) === undefined)
+            {
+                moves.push(one_space)
+
+                // check if move 2 possible
+                if(row === 1){
+                    const two_space = Square.at(row + 2, col)
+                    if(board.getPiece(two_space) === undefined){
+                        moves.push(two_space)
+                    }
+                }
             }
         }
 
