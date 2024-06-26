@@ -13,37 +13,25 @@ export default class Pawn extends Piece {
         const row = square.row;
         const col = square.col;
 
-        if (this.player === Player.BLACK) {
-            const one_space = Square.at(row - 1, col)
-            if(board.getPiece(one_space) === undefined)
-            {
-                moves.push(one_space)
+        const isWhite = this.player===Player.WHITE
 
-                // check if move 2 possible
-                if(row === 6){
-                    const two_space = Square.at(row - 2, col)
-                    if(board.getPiece(two_space) === undefined){
-                        moves.push(two_space)
-                    }
-                }
-            }
+        const direction = isWhite?[1,0]:[-1,0]
+        const startRow = isWhite? 1:6
+        let maxStep = row === startRow?2:1 
+
+        let _row = row + direction[0];
+        let _col = col + direction[1];
+           
+        while(!(_row < 0 || _row > 7 || _col < 0 || _col > 7 ) && maxStep > 0){
+            const square = Square.at(_row, _col)
+            if(board.getPiece(square) !== undefined) break
+              
+            moves.push(square)
+            _row += direction[0];
+            _col += direction[1];
+            maxStep--;
         }
-        else {
-            const one_space = Square.at(row + 1, col)
-            if(board.getPiece(one_space) === undefined)
-            {
-                moves.push(one_space)
-
-                // check if move 2 possible
-                if(row === 1){
-                    const two_space = Square.at(row + 2, col)
-                    if(board.getPiece(two_space) === undefined){
-                        moves.push(two_space)
-                    }
-                }
-            }
-        }
-
+        
         return moves;
     }
 }

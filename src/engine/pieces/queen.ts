@@ -19,6 +19,12 @@ export default class Queen extends Piece {
             [0,1],[1,0],[-1,0],[0,-1]
         ]
 
+        const myObject = {
+            a: 1,
+            b: 2,
+            c: 3,
+        };
+
         directions.forEach((v)=>{
             let _row = row + v[0];
             let _col = col + v[1];
