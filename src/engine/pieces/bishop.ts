@@ -14,13 +14,21 @@ export default class Bishop extends Piece {
         const row = square.row;
         const col = square.col;
 
-        for(let i = 0; i < 8; i++){
-            for(let j = 0; j < 8; j++){
-                if(i === row && j === col) continue
-                if(Math.abs(i - row) !== Math.abs(j - col)) continue
-                moves.push(Square.at(i,j))
+        const directions = [[1,1],[-1,1],[1,-1],[-1,-1]]
+
+        directions.forEach((v)=>{
+            let _row = row + v[0];
+            let _col = col + v[1];
+            
+            while(!(_row < 0 || _row > 7 || _col < 0 || _col > 7 )){
+                const square = Square.at(_row, _col)
+                if(board.getPiece(square) !== undefined) break
+                
+                moves.push(square)
+                _row += v[0];
+                _col += v[1];
             }
-        }
+        })
 
         return moves;
     }
