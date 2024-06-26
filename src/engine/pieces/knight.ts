@@ -15,7 +15,7 @@ export default class Knight extends Piece {
         const col = square.col;
 
         for(let i = Math.max(0,row-2); i <= Math.min(7,row+2); i++){
-            for(let j = Math.max(0,row-2); j <= Math.min(7,row+2); j++){
+            for(let j = Math.max(0,col-2); j <= Math.min(7,col+2); j++){
                 if(i === row && j === col) continue
 
                 const rowDiff = Math.abs(i - row)
