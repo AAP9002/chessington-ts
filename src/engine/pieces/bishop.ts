@@ -1,6 +1,7 @@
 import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
+import Square from '../square';
 
 export default class Bishop extends Piece {
     public constructor(player: Player) {
@@ -8,6 +9,19 @@ export default class Bishop extends Piece {
     }
 
     public getAvailableMoves(board: Board) {
-        return new Array(0);
+        let moves = new Array()
+        const square = board.findPiece(this);
+        const row = square.row;
+        const col = square.col;
+
+        for(let i = 0; i < 8; i++){
+            for(let j = 0; j < 8; j++){
+                if(i === row && j === col) continue
+                if(Math.abs(i - row) !== Math.abs(j - col)) continue
+                moves.push(Square.at(i,j))
+            }
+        }
+
+        return moves;
     }
 }
