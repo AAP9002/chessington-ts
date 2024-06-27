@@ -2,6 +2,7 @@ import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
 import Square from '../square';
+import King from './king';
 
 export default class Queen extends Piece {
     public constructor(player: Player) {
@@ -25,7 +26,14 @@ export default class Queen extends Piece {
             
             while(!(currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7 )){
                 const square = Square.at(currentRow, currentCol)
-                if(board.getPiece(square) !== undefined) break
+                const pieceOnSquare = board.getPiece(square)
+                if(pieceOnSquare !== undefined){
+                    if(
+                        pieceOnSquare.player !== this.player &&
+                        !(pieceOnSquare instanceof King)
+                    ){moves.push(square)}
+                    break
+                }
                 
                 moves.push(square)
                 currentRow += v[0];
