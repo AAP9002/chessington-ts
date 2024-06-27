@@ -22,17 +22,17 @@ export default class Bishop extends Piece {
             let currentCol = col + v[1];
             
             while(!(currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7 )){
-                const square = Square.at(currentRow, currentCol)
-                const pieceOnSquare = board.getPiece(square)
+                const currentSquare = Square.at(currentRow, currentCol)
+                const pieceOnSquare = board.getPiece(currentSquare)
                 if(pieceOnSquare !== undefined){
                     if(
                         pieceOnSquare.player !== this.player &&
                         !(pieceOnSquare instanceof King)
-                    ){moves.push(square)}
+                    ){moves.push(currentSquare)}
                     break;
                 }
                 
-                moves.push(square);
+                moves.push(currentSquare);
                 currentRow += v[0];
                 currentCol += v[1];
             }
