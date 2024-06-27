@@ -2,6 +2,7 @@ import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
 import Square from '../square';
+import King from './king';
 
 export default class Knight extends Piece {
     public constructor(player: Player) {
@@ -14,16 +15,28 @@ export default class Knight extends Piece {
         const row = square.row;
         const col = square.col;
 
-        for(let i = Math.max(0,row-2); i <= Math.min(7,row+2); i++){
-            for(let j = Math.max(0,col-2); j <= Math.min(7,col+2); j++){
-                if(i === row && j === col) continue
+        const ReletivePos = [[1, 2], [2, 1], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2], [2, -1]]
 
-                const rowDiff = Math.abs(i - row)
-                const colDiff = Math.abs(j - col)
-                if(rowDiff === 1 && colDiff === 2)  moves.push(Square.at(i,j))
-                if(rowDiff === 2 && colDiff === 1)  moves.push(Square.at(i,j))
+        ReletivePos.forEach((v) => {
+            const currentRow = row + v[0]
+            const currentCol = col + v[1]
+
+            if(currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7 ) return
+
+            const square = Square.at(currentRow, currentCol)
+
+            // if blocked, add square if enable take piece
+            const pieceOnSquare = board.getPiece(square)
+            if (pieceOnSquare !== undefined) {
+                if (
+                    pieceOnSquare.player !== this.player &&
+                    !(pieceOnSquare instanceof King)
+                ) { moves.push(square) }
+                return
             }
-        }
+
+            moves.push(square)
+        })
 
         return moves;
     }
