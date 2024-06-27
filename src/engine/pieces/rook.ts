@@ -2,6 +2,7 @@ import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
 import Square from '../square';
+import King from './king';
 
 export default class Rook extends Piece {
     public constructor(player: Player) {
@@ -14,33 +15,32 @@ export default class Rook extends Piece {
         const row = square.row;
         const col = square.col;
 
-        // check up
-        for(let i = row+1; i < 8; i++){
-            const square = Square.at(i,col)
-            if(board.getPiece(square) !== undefined) break
-            moves.push(square)
-        }
+        const directions = [
+            [0,1],[1,0],[-1,0],[0,-1]
+        ]
 
-        // check down
-        for(let i = row-1; i >=0 ; i--){
-            const square = Square.at(i,col)
-            if(board.getPiece(square) !== undefined) break
-            moves.push(square)
-        }
+        directions.forEach((v)=>{
+            let currentRow = row + v[0];
+            let currentCol = col + v[1];
+            
+            while(!(currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7 )){
+                const square = Square.at(currentRow, currentCol)
 
-        // check right
-        for(let j = col+1; j < 8; j++){
-            const square = Square.at(row,j)
-            if(board.getPiece(square) !== undefined) break
-            moves.push(square)
-        }
-        
-        // check left
-        for(let j = col-1; j >= 0; j--){
-            const square = Square.at(row,j)
-            if(board.getPiece(square) !== undefined) break
-            moves.push(square)
-        }
+                // if blocked, add square if enable take piece
+                const pieceOnSquare = board.getPiece(square)
+                if(pieceOnSquare !== undefined){
+                    if(
+                        pieceOnSquare.player !== this.player &&
+                        !(pieceOnSquare instanceof King)
+                    ){moves.push(square)}
+                    break
+                }
+                
+                moves.push(square)
+                currentRow += v[0];
+                currentCol += v[1];
+            }
+        })
 
         return moves;
     }
