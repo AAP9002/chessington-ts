@@ -15,9 +15,9 @@ export default class Knight extends Piece {
         const row = square.row;
         const col = square.col;
 
-        const ReletivePos = [[1, 2], [2, 1], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2], [2, -1]]
+        const relativePos = [[1, 2], [2, 1], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2], [2, -1]]
 
-        ReletivePos.forEach((v) => {
+        relativePos.forEach((v) => {
             const currentRow = row + v[0]
             const currentCol = col + v[1]
 
