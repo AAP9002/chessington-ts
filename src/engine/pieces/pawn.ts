@@ -19,16 +19,16 @@ export default class Pawn extends Piece {
         const startRow = isWhite? 1:6
         let maxStep = row === startRow?2:1 
 
-        let _row = row + direction[0];
-        let _col = col + direction[1];
+        let currentRow = row + direction[0];
+        let currentCol = col + direction[1];
            
-        while(!(_row < 0 || _row > 7 || _col < 0 || _col > 7 ) && maxStep > 0){
-            const square = Square.at(_row, _col)
+        while(!(currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7 ) && maxStep > 0){
+            const square = Square.at(currentRow, currentCol)
             if(board.getPiece(square) !== undefined) break
               
             moves.push(square)
-            _row += direction[0];
-            _col += direction[1];
+            currentRow += direction[0];
+            currentCol += direction[1];
             maxStep--;
         }
         

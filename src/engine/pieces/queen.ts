@@ -19,23 +19,17 @@ export default class Queen extends Piece {
             [0,1],[1,0],[-1,0],[0,-1]
         ]
 
-        const myObject = {
-            a: 1,
-            b: 2,
-            c: 3,
-        };
-
         directions.forEach((v)=>{
-            let _row = row + v[0];
-            let _col = col + v[1];
+            let currentRow = row + v[0];
+            let currentCol = col + v[1];
             
-            while(!(_row < 0 || _row > 7 || _col < 0 || _col > 7 )){
-                const square = Square.at(_row, _col)
+            while(!(currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7 )){
+                const square = Square.at(currentRow, currentCol)
                 if(board.getPiece(square) !== undefined) break
                 
                 moves.push(square)
-                _row += v[0];
-                _col += v[1];
+                currentRow += v[0];
+                currentCol += v[1];
             }
         })
 
