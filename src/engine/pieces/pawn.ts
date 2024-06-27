@@ -5,9 +5,14 @@ import Square from '../square';
 import King from './king';
 
 export default class Pawn extends Piece {
+
+    canEnPassant: boolean = false
+
     public constructor(player: Player) {
         super(player);
     }
+
+
     public getAvailableMoves(board: Board) {
         let moves = new Array()
         const square = board.findPiece(this);
@@ -24,7 +29,10 @@ export default class Pawn extends Piece {
         let currentRow = row + direction[0];
         let currentCol = col + direction[1];
 
-        while (!(currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7) && maxStep > 0) {
+        while (
+            !(currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7) &&
+            maxStep > 0
+        ) {
             const square = Square.at(currentRow, currentCol)
             if (board.getPiece(square) !== undefined) break
 
@@ -34,36 +42,67 @@ export default class Pawn extends Piece {
             maxStep--;
         }
 
-        // taking pieces
-
         // Check diagonal left
         currentRow = row + direction[0];
         currentCol = col - 1;
         if (currentRow >= 0 && currentRow <= 7 && currentCol >= 0 && currentCol <= 7) {
-            const currentSquareL = Square.at(currentRow, currentCol)
-            const pieceOnSquareL = board.getPiece(currentSquareL)
-            if (pieceOnSquareL !== undefined) {
+            const currentSquareLeft = Square.at(currentRow, currentCol)
+            const pieceOnSquareLeft = board.getPiece(currentSquareLeft)
+            if (pieceOnSquareLeft !== undefined) {
                 if (
-                    pieceOnSquareL.player !== this.player &&
-                    !(pieceOnSquareL instanceof King)
-                ) { moves.push(currentSquareL) }
+                    pieceOnSquareLeft.player !== this.player &&
+                    !(pieceOnSquareLeft instanceof King)
+                ) { moves.push(currentSquareLeft) }
             }
         }
 
         // Check diagonal right
         currentRow = row + direction[0];
-        currentCol = col - 1;
+        currentCol = col + 1;
         if (currentRow >= 0 && currentRow <= 7 && currentCol >= 0 && currentCol <= 7) {
-            const currentSquareR = Square.at(currentRow, currentCol)
-            const pieceOnSquareR = board.getPiece(currentSquareR)
-            if (pieceOnSquareR !== undefined) {
+            const currentSquareRight = Square.at(currentRow, currentCol)
+            const pieceOnSquareRight = board.getPiece(currentSquareRight)
+            if (pieceOnSquareRight !== undefined) {
                 if (
-                    pieceOnSquareR.player !== this.player &&
-                    !(pieceOnSquareR instanceof King)
-                ) { moves.push(currentSquareR) }
+                    pieceOnSquareRight.player !== this.player &&
+                    !(pieceOnSquareRight instanceof King)
+                ) { moves.push(currentSquareRight) }
             }
         }
 
+        // check for En Passant
+        console.log("Checking En Passant")
+        currentRow = row + direction[0];
+        currentCol = col + 1;
+        if (currentRow >= 0 && currentRow <= 7 && currentCol >= 0 && currentCol <= 7) {
+            const currentSquareRight = Square.at(currentRow-1, currentCol)
+            const pieceOnSquareRight = board.getPiece(currentSquareRight)
+            if (
+                pieceOnSquareRight !== undefined &&
+                pieceOnSquareRight.player !== this.player &&
+                pieceOnSquareRight instanceof Pawn &&
+                pieceOnSquareRight.canEnPassant
+            ) {
+                console.log("Piece on right")
+                moves.push(Square.at(currentRow, currentCol))
+            }
+        }
+
+        currentRow = row + direction[0];
+        currentCol = col - 1;
+        if (currentRow >= 0 && currentRow <= 7 && currentCol >= 0 && currentCol <= 7) {
+            const currentSquareLeft = Square.at(currentRow-1, currentCol)
+            const pieceOnSquareLeft = board.getPiece(currentSquareLeft)
+            if (
+                pieceOnSquareLeft !== undefined &&
+                pieceOnSquareLeft.player !== this.player &&
+                pieceOnSquareLeft instanceof Pawn &&
+                pieceOnSquareLeft.canEnPassant
+            ) {
+                console.log("Piece on left")
+                moves.push(Square.at(currentRow, currentCol))
+            }
+        }
 
         return moves;
     }

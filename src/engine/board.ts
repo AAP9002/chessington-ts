@@ -2,6 +2,8 @@ import Player from './player';
 import GameSettings from './gameSettings';
 import Square from './square';
 import Piece from './pieces/piece';
+import Pawn from './pieces/pawn';
+import { updateChessBoard } from '../frontend/js/chessington';
 
 export default class Board {
     public currentPlayer: Player;
@@ -32,11 +34,43 @@ export default class Board {
     }
 
     public movePiece(fromSquare: Square, toSquare: Square) {
+        let pieceRemoved = false;
+
         const movingPiece = this.getPiece(fromSquare);
         if (!!movingPiece && movingPiece.player === this.currentPlayer) {
+            if(movingPiece instanceof Pawn){
+                if(Math.abs(fromSquare.row - toSquare.row) >= 2)
+                {
+                    movingPiece.canEnPassant = true
+                    console.log("En Passant Set")
+                }
+
+                const squareBehind = Square.at(fromSquare.row, toSquare.col)
+                const piece = this.getPiece(squareBehind)
+                if(piece instanceof Pawn){
+                    if(piece.canEnPassant)
+                        {
+                            this.setPiece(squareBehind, undefined);
+                            pieceRemoved = true;
+                        }
+                }
+            }
+
+            this.board.forEach((rows) =>
+                rows.forEach((cell)=>{
+                    if( cell instanceof Pawn &&
+                        cell !== movingPiece
+                    ){
+                        cell.canEnPassant = false
+                    }
+                })
+            )
+
             this.setPiece(toSquare, movingPiece);
             this.setPiece(fromSquare, undefined);
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
+
+            if(pieceRemoved) updateChessBoard(this);
         }
     }
 

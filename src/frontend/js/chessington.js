@@ -40,12 +40,12 @@ function pieceToPieceString(piece) {
     }
 }
 
-function boardToPositionObject() {
+function boardToPositionObject(a = board) {
     let position = {};
     for (let row = 0; row < GameSettings.BOARD_SIZE; row++) {
         for (let col = 0; col < GameSettings.BOARD_SIZE; col++) {
             const square = Square.at(row, col);
-            const piece = board.getPiece(square);
+            const piece = a.getPiece(square);
 
             if (!!piece) {
                 position[squareToPositionString(square)] = pieceToPieceString(piece);
@@ -117,6 +117,20 @@ export function createChessBoard() {
             showNotation: false,
             draggable: true,
             position: boardToPositionObject(board),
+            onDragStart: onDragStart,
+            onDrop: onDrop
+        }
+    );
+    updateStatus();
+}
+
+export function updateChessBoard(a){
+    boardUI = ChessBoard(
+        'chess-board', 
+        {
+            showNotation: false,
+            draggable: true,
+            position: boardToPositionObject(a),
             onDragStart: onDragStart,
             onDrop: onDrop
         }
