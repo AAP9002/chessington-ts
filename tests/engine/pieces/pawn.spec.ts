@@ -185,3 +185,51 @@ describe('Pawn', () => {
         moves.should.not.deep.include(Square.at(4, 3));
     });
 });
+
+
+describe('En Passant', () => {
+
+    let board: Board;
+    beforeEach(() => board = new Board(Player.WHITE));
+
+    it('can only take En Passant if they have moved 2 spaces', () => {
+        const pawnWhite = new Pawn(Player.WHITE);
+        const pawnBlack = new Pawn(Player.BLACK);
+        board.setPiece(Square.at(4, 1), pawnBlack);
+        board.setPiece(Square.at(4, 0), pawnWhite);
+        pawnBlack.canEnPassant = true
+
+        const moves = pawnWhite.getAvailableMoves(board);
+
+        moves.should.have.length(2);
+        moves.should.deep.include(Square.at(5, 1));
+    });
+
+    it('can only take En Passant if they have moved 2 spaces', () => {
+        const pawnWhite = new Pawn(Player.WHITE);
+        const pawnBlack = new Pawn(Player.BLACK);
+        board.setPiece(Square.at(4, 0), pawnBlack);
+        board.setPiece(Square.at(4, 1), pawnWhite);
+        pawnBlack.canEnPassant = true
+
+        const moves = pawnWhite.getAvailableMoves(board);
+        console.log(moves)
+
+        moves.should.have.length(2);
+        moves.should.deep.include(Square.at(5, 0));
+    });
+
+    it('can not take En Passant if they have moved 1 space', () => {
+        const pawnWhite = new Pawn(Player.WHITE);
+        const pawnBlack = new Pawn(Player.BLACK);
+        board.setPiece(Square.at(4, 0), pawnBlack);
+        board.setPiece(Square.at(4, 1), pawnWhite);
+        pawnBlack.canEnPassant = false
+
+        const moves = pawnWhite.getAvailableMoves(board);
+        console.log(moves)
+
+        moves.should.have.length(1);
+        moves.should.not.deep.include(Square.at(5, 0));
+    });
+});
