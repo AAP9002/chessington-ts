@@ -3,6 +3,7 @@ import Board from '../../../src/engine/board';
 import Player from '../../../src/engine/player';
 import Square from '../../../src/engine/square';
 import Pawn from '../../../src/engine/pieces/pawn';
+import Rook from '../../../src/engine/pieces/rook';
 
 describe('King', () => {
     let board: Board;
@@ -74,4 +75,53 @@ describe('King', () => {
 
         moves.should.not.deep.include(Square.at(5, 5));
     });
+});
+
+
+
+describe('castling', () => {
+    let board: Board;
+    beforeEach(() => board = new Board());
+
+    it('can perform castling', () => {
+        const king = new King(Player.WHITE);
+        board.setPiece(Square.at(0, 4), king);
+
+        const rook = new Rook(Player.WHITE)
+        board.setPiece(Square.at(0, 0), rook)
+
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.deep.include(Square.at(0, 0));
+    });
+
+    it('can not perform castling due to passing check space in path', () => {
+        const king = new King(Player.WHITE);
+        board.setPiece(Square.at(0, 4), king);
+
+        const rook = new Rook(Player.WHITE)
+        board.setPiece(Square.at(0, 0), rook)
+
+        const pawn = new Pawn(Player.BLACK)
+        board.setPiece(Square.at(1, 0), pawn)
+
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.not.deep.include(Square.at(0, 0));
+    });
+
+
+    it('can not perform castling due king has moved', () => {
+        const king = new King(Player.WHITE);
+        king.hasMoved = true;
+        board.setPiece(Square.at(0, 4), king);
+
+        const rook = new Rook(Player.WHITE)
+        board.setPiece(Square.at(0, 0), rook)
+
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.not.deep.include(Square.at(0, 0));
+    });
+
 });
